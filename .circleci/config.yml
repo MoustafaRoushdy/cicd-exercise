@@ -48,16 +48,43 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
+      - run: apk add --update curl
       - run:
-          name: Test job
-          # Fail the job intentionally to simulate an error.
-          command:  return 1
-      - destroy_environment
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
+  create_infrastructure_smoke_test: 
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --region us-east-1
+      - run:
+          name: fail the run 
+          command: return 0
+      - run:
+          name: call the rollback command
+          command: destroy_environment
 
+            
 # Sequential workflow
 workflows:
   myWorkflow:
     jobs:
-      - create_infrastructure
+      # - create_infrastructure
       # - configure_infrastructure
-      - smoke_test
+      # - smoke_test
+      - create_infrastructure_smoke_test
