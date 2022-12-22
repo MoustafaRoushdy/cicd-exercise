@@ -9,6 +9,7 @@ version: 2.1
 commands:
    # Exercise - Rollback
    destroy_environment:
+     name: destory the env
      steps:
        - run:
            name: Destroy environment
