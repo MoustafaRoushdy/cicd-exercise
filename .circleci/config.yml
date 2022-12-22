@@ -74,7 +74,7 @@ jobs:
               --region us-east-1
       - run:
           name: fail the run 
-          command: return 0
+          command: exit 0
       - run:
           name: call the rollback command
           command: destroy_environment
