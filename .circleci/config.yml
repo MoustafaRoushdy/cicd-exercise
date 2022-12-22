@@ -1,6 +1,6 @@
 version: 2.1
 # Use a package of configuration called an orb.
-orbs:
+# orbs:
   # Choose either one of the orbs below
   # welcome: circleci/welcome-orb@0.4.1
   # aws-cli: circleci/aws-cli@2.0.3
@@ -27,7 +27,7 @@ jobs:
                 --region us-east-1
   configure_infrastructure: 
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/python:3.10 #python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Install Ansible
           command: |
-            apk add --update ansible
+            apt install ansible
       - run:
           name: Run Playbook and Configure server
           command: |
